@@ -1,25 +1,34 @@
 import { Injectable } from '@nestjs/common';
+
 import { UserM } from '@user/domain/user';
 import { UserRepository } from '@user/domain/user.repository';
+import { PrismaService } from '@prisma/application/prisma.service';
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
-  create(user: UserM): Promise<UserM> {
-    throw new Error('Method not implemented.');
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(user: UserM): Promise<UserM> {
+    return this.prisma.user.create({
+      data: user,
+    });
   }
-  findById(id: number): Promise<UserM> {
-    throw new Error('Method not implemented.');
+  async findById(id: number): Promise<UserM> {
+    return this.prisma.user.findUnique({ where: { id } });
   }
-  findByEmail(email: string): Promise<UserM> {
-    throw new Error('Method not implemented.');
+  async findByEmail(email: string): Promise<UserM> {
+    return this.prisma.user.findUnique({ where: { email } });
   }
-  update(user: Partial<UserM>): Promise<UserM> {
-    throw new Error('Method not implemented.');
+  async update(id: number, user: Partial<UserM>): Promise<UserM> {
+    return this.prisma.user.update({
+      where: { id },
+      data: user,
+    });
   }
-  delete(id: number): Promise<void> {
-    throw new Error('Method not implemented.');
+  async delete(id: number): Promise<void> {
+    await this.prisma.user.delete({ where: { id } });
   }
-  list(): Promise<UserM[]> {
-    throw new Error('Method not implemented.');
+  async list(): Promise<UserM[]> {
+    return this.prisma.user.findMany();
   }
 }

@@ -20,6 +20,8 @@
     "paths": {
       "@user": ["src/general/users"],
       "@user/*": ["src/general/users/*"],
+      "@prisma": ["src/global/libs/prisma"],
+      "@prisma/*": ["src/global/libs/prisma/*"]
     }
   }
 }
