@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+code" style="box-sizing: inherit; -webkit-tap-highlight-color: transparent; background: rgba(0, 0, 0, 0); border: 0px; font-family: inherit; font-size: inherit; margin: 0px; padding: 0px; border-radius: 0.1rem; color: var(--md-default-fg-color--lightest); cursor: pointer; height: 1.5em; outline: none; outline-offset: 0.1rem; position: absolute; right: 0.5em; top: 0.5em; transition: color 0.25s ease 0s; width: 1.5em; z-index: 1;">#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+yarn format
+yarn lint

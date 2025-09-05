@@ -23,7 +23,8 @@
     "migrate:dev": "npx prisma migrate dev",
     "generate": "npx prisma generate",
     "studio": "npx prisma studio",
-    "reset": "npx prisma migrate reset"
+    "reset": "npx prisma migrate reset",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -46,6 +47,7 @@
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.0",
     "jest": "^29.5.0",
     "prettier": "^3.0.0",
     "prisma": "^6.15.0",
