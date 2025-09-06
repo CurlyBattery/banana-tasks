@@ -34,6 +34,8 @@ model Role {
   description String?
 
   userRoles UserRole[]
+
+  @@map("roles")
 }
 
 model UserRole {
@@ -81,6 +83,8 @@ model Notification {
   createdAt DateTime @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
 }
 
 model RefreshToken {
@@ -93,4 +97,14 @@ model RefreshToken {
   createdAt DateTime @default(now()) @map("created_at")
 
   actor User? @relation(fields: [userId], references: [id])
+
+  @@map("refresh_tokens")
+}
+
+model Department {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  description String?
+
+  @@map("departments")
 }
