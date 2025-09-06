@@ -15,6 +15,7 @@ model User {
   fullName     String? @map("full_name")
   isActive     Boolean @default(true)
   timezone     String?
+  departmentId Int?    @map("department_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -22,8 +23,9 @@ model User {
   userRoles     UserRole[]
   assignedTasks Task[]         @relation("assignedTo")
   createdTasks  Task[]         @relation("createdBy")
-  Notification  Notification[]
-  RefreshToken  RefreshToken[]
+  notifications Notification[]
+  refreshTokens RefreshToken[]
+  department    Department?    @relation(fields: [departmentId], references: [id], onDelete: Cascade)
 
   @@map("users")
 }
