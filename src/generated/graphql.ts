@@ -1,0 +1,42 @@
+/*
+ * -------------------------------------------------------
+ * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+ * -------------------------------------------------------
+ */
+
+/* tslint:disable */
+/* eslint-disable */
+
+export interface CreateUserInput {
+  departmentId?: Nullable<number>;
+  email: string;
+  fullName: string;
+  password: string;
+}
+
+export interface UpdateUserInput {
+  departmentId?: Nullable<number>;
+  email?: Nullable<string>;
+  id: number;
+  name?: Nullable<string>;
+}
+
+export interface IMutation {
+  createUser(createUserInput: CreateUserInput): User | Promise<User>;
+  removeUser(id: number): Nullable<User> | Promise<Nullable<User>>;
+  updateUser(updateUserInput: UpdateUserInput): User | Promise<User>;
+}
+
+export interface IQuery {
+  getUser(id: number): Nullable<User> | Promise<Nullable<User>>;
+  getUsers(): Nullable<User>[] | Promise<Nullable<User>[]>;
+}
+
+export interface User {
+  departmentId?: Nullable<number>;
+  email: string;
+  fullName?: Nullable<string>;
+  id?: Nullable<number>;
+}
+
+type Nullable<T> = T | null;

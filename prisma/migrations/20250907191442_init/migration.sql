@@ -3,12 +3,13 @@ CREATE TYPE "public"."TaskStatus" AS ENUM ('NEW', 'IN_PROGRES', 'DONE', 'OVERDUE
 
 -- CreateTable
 CREATE TABLE "public"."users" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
     "password_hash" TEXT NOT NULL,
     "full_name" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "timezone" TEXT,
+    "department_id" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -16,18 +17,18 @@ CREATE TABLE "public"."users" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."Role" (
+CREATE TABLE "public"."roles" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
 
-    CONSTRAINT "Role_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "public"."user_roles" (
     "role_id" INTEGER NOT NULL,
-    "user_id" BIGINT NOT NULL,
+    "user_id" INTEGER NOT NULL,
     "assignedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "user_roles_pkey" PRIMARY KEY ("user_id","role_id")
@@ -35,50 +36,65 @@ CREATE TABLE "public"."user_roles" (
 
 -- CreateTable
 CREATE TABLE "public"."tasks" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT,
     "status" "public"."TaskStatus" NOT NULL DEFAULT 'NEW',
     "priority" INTEGER DEFAULT 0,
     "deadline" TIMESTAMP(3) NOT NULL,
-    "assigned_to_id" BIGINT,
-    "created_by_id" BIGINT,
+    "assigned_to_id" INTEGER,
+    "created_by_id" INTEGER,
 
     CONSTRAINT "tasks_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "public"."Notification" (
-    "id" BIGSERIAL NOT NULL,
-    "user_id" BIGINT NOT NULL,
+CREATE TABLE "public"."notifications" (
+    "id" SERIAL NOT NULL,
+    "user_id" INTEGER NOT NULL,
     "type" TEXT NOT NULL,
     "payload" JSONB,
     "isRead" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Notification_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "notifications_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "public"."RefreshToken" (
-    "id" BIGSERIAL NOT NULL,
-    "userId" BIGINT,
+CREATE TABLE "public"."refresh_tokens" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER,
     "tokenHash" TEXT NOT NULL,
     "expires_at" TIMESTAMP(3) NOT NULL,
     "revoked" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "RefreshToken_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "refresh_tokens_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."departments" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+
+    CONSTRAINT "departments_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "public"."users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Role_name_key" ON "public"."Role"("name");
+CREATE UNIQUE INDEX "roles_name_key" ON "public"."roles"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "departments_name_key" ON "public"."departments"("name");
 
 -- AddForeignKey
-ALTER TABLE "public"."user_roles" ADD CONSTRAINT "user_roles_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "public"."Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."users" ADD CONSTRAINT "users_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "public"."departments"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."user_roles" ADD CONSTRAINT "user_roles_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "public"."roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."user_roles" ADD CONSTRAINT "user_roles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -90,7 +106,7 @@ ALTER TABLE "public"."tasks" ADD CONSTRAINT "tasks_assigned_to_id_fkey" FOREIGN 
 ALTER TABLE "public"."tasks" ADD CONSTRAINT "tasks_created_by_id_fkey" FOREIGN KEY ("created_by_id") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."Notification" ADD CONSTRAINT "Notification_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."notifications" ADD CONSTRAINT "notifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."RefreshToken" ADD CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."refresh_tokens" ADD CONSTRAINT "refresh_tokens_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;

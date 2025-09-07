@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id           BigInt  @id @default(autoincrement())
+  id           Int     @id @default(autoincrement())
   email        String  @unique
   passwordHash String  @map("password_hash")
   fullName     String? @map("full_name")
@@ -42,7 +42,7 @@ model Role {
 
 model UserRole {
   roleId     Int      @map("role_id")
-  userId     BigInt   @map("user_id")
+  userId     Int      @map("user_id")
   assignedAt DateTime @default(now())
 
   role Role @relation(fields: [roleId], references: [id])
@@ -60,14 +60,14 @@ enum TaskStatus {
 }
 
 model Task {
-  id           BigInt     @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   title        String
   description  String?
   status       TaskStatus @default(NEW)
   priority     Int?       @default(0)
   deadline     DateTime
-  assignedToId BigInt?    @map("assigned_to_id")
-  createdById  BigInt?    @map("created_by_id")
+  assignedToId Int?       @map("assigned_to_id")
+  createdById  Int?       @map("created_by_id")
 
   assignedTo User? @relation("assignedTo", fields: [assignedToId], references: [id])
   createdBy  User? @relation("createdBy", fields: [createdById], references: [id])
@@ -76,8 +76,8 @@ model Task {
 }
 
 model Notification {
-  id      BigInt  @id @default(autoincrement())
-  userId  BigInt  @map("user_id")
+  id      Int     @id @default(autoincrement())
+  userId  Int     @map("user_id")
   type    String
   payload Json?
   isRead  Boolean @default(false)
@@ -90,8 +90,8 @@ model Notification {
 }
 
 model RefreshToken {
-  id        BigInt   @id @default(autoincrement())
-  userId    BigInt?
+  id        Int      @id @default(autoincrement())
+  userId    Int?
   tokenHash String
   expiresAt DateTime @map("expires_at")
   revoked   Boolean  @default(false)
@@ -107,6 +107,8 @@ model Department {
   id          Int     @id @default(autoincrement())
   name        String  @unique
   description String?
+
+  user User[]
 
   @@map("departments")
 }
