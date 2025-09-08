@@ -19,7 +19,8 @@ export class UsersService {
       this.userRepo,
       this.encryptionService,
     );
-    return createUserUseCase.execute(user);
+    const createdUser = await createUserUseCase.execute(user);
+    return createdUser;
   }
 
   async getUser(id: number) {
@@ -46,5 +47,9 @@ export class UsersService {
     }
     const deleted = await this.userRepo.delete(id);
     return !!deleted;
+  }
+
+  async validatePassword(user: UserM, password: string) {
+    return this.encryptionService.verifyPassword(password, user.passwordHash);
   }
 }

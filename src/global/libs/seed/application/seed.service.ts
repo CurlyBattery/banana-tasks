@@ -31,7 +31,6 @@ export class SeedService implements OnModuleInit {
         create: { ...department },
       });
     }
-    console.log('Departments successfully seeded');
     this.logger.log('Departments successfully seeded');
   }
 }

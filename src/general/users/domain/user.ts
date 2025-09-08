@@ -10,15 +10,3 @@ export class UserM {
   createdAt?: Date;
   updatedAt?: Date;
 }
-
-export class RoleM {
-  id?: number;
-  name: string;
-  description?: string;
-}
-
-export class UserRoleM {
-  userId: number;
-  roleId: number;
-  assignedAt?: Date;
-}
