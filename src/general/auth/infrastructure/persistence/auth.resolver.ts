@@ -6,18 +6,20 @@ import { AuthService } from '@auth/application/auth.service';
 import { SignInInput } from '@auth/infrastructure/persistence/dto/sign-in.input';
 import { cookieFactory } from '../../../../global/libs/auth/cookie.lib';
 import { BadRequestException, UseGuards } from '@nestjs/common';
-import { AccessTokenGuard } from '@common/guards/access-token.guard';
 import { RefreshTokenGuard } from '@common/guards/refresh-token.guard';
+import { Public } from '@common/decorators/public.decorator';
 
 @Resolver('Auth')
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Mutation('signUp')
   signUp(@Args('createUserInput') createUserInput: CreateUserInput) {
     return this.authService.register(createUserInput);
   }
 
+  @Public()
   @Mutation('signIn')
   async signIn(
     @Context() context: { req: Request; res: Response },
@@ -74,7 +76,6 @@ export class AuthResolver {
     return { message: 'Successfully Logout' };
   }
 
-  @UseGuards(AccessTokenGuard)
   @Query('me')
   async getAuthenticateUser(
     @Context() context: { req: Request; res: Response },

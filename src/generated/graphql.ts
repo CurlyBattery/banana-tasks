@@ -56,6 +56,7 @@ export interface User {
   email: string;
   fullName?: Nullable<string>;
   id?: Nullable<number>;
+  isActive?: Nullable<boolean>;
 }
 
 type Nullable<T> = T | null;

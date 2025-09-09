@@ -9,6 +9,8 @@ import { AuthService } from '@auth/application/auth.service';
 import { AuthResolver } from '@auth/infrastructure/persistence/auth.resolver';
 import { EncryptionModule } from '@hashing/encryption.module';
 import { AccessTokenGuard } from '@common/guards/access-token.guard';
+import { RefreshTokenGuard } from '@common/guards/refresh-token.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -31,9 +33,13 @@ import { AccessTokenGuard } from '@common/guards/access-token.guard';
       provide: RefreshRepository,
       useClass: PrismaRefreshRepository,
     },
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
+    },
     AuthService,
     AuthResolver,
-    AccessTokenGuard,
+    RefreshTokenGuard,
   ],
 })
 export class AuthModule {}
