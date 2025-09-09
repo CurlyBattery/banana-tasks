@@ -8,6 +8,7 @@ import { PrismaRefreshRepository } from '@auth/infrastructure/prisma-refresh.rep
 import { AuthService } from '@auth/application/auth.service';
 import { AuthResolver } from '@auth/infrastructure/persistence/auth.resolver';
 import { EncryptionModule } from '@hashing/encryption.module';
+import { AccessTokenGuard } from '@common/guards/access-token.guard';
 
 @Module({
   imports: [
@@ -23,17 +24,6 @@ import { EncryptionModule } from '@hashing/encryption.module';
       }),
       inject: [ConfigService],
     }),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        global: true,
-        secret: configService.get<string>('RT_JWT_SECRET'),
-        signOptions: {
-          expiresIn: configService.get<string>('RT_EXPIRES_IN'),
-        },
-      }),
-      inject: [ConfigService],
-    }),
     EncryptionModule,
   ],
   providers: [
@@ -43,6 +33,7 @@ import { EncryptionModule } from '@hashing/encryption.module';
     },
     AuthService,
     AuthResolver,
+    AccessTokenGuard,
   ],
 })
 export class AuthModule {}

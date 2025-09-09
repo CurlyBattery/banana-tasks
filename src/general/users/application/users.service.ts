@@ -1,11 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UserRepository } from '@user/domain/user.repository';
 import { UserM } from '@user/domain/user';
 import { CreateUserInput } from '@user/infrastructure/presentation/dto/create-user.input';
-import { CreateUserUseCase } from '@user/application/use-cases/create-user.usecase';
 import { EncryptionService } from '@hashing/application/encryption.service';
 import { UpdateUserInput } from '@user/infrastructure/presentation/dto/update-user.input';
-import { UpdateUserUseCase } from '@user/application/use-cases/update-user.usecase';
 
 @Injectable()
 export class UsersService {
@@ -14,13 +16,21 @@ export class UsersService {
     private readonly encryptionService: EncryptionService,
   ) {}
 
-  async createUser(user: CreateUserInput): Promise<UserM> {
-    const createUserUseCase = new CreateUserUseCase(
-      this.userRepo,
-      this.encryptionService,
+  async createUser(createUserInput: CreateUserInput): Promise<UserM> {
+    const exists = await this.userRepo.findByEmail(createUserInput.email);
+    if (exists) {
+      throw new ConflictException('User Exists');
+    }
+
+    const passwordHash = await this.encryptionService.hashPassword(
+      createUserInput.password,
     );
-    const createdUser = await createUserUseCase.execute(user);
-    return createdUser;
+    delete createUserInput.password;
+    return this.userRepo.create({
+      ...createUserInput,
+      isActive: true,
+      passwordHash,
+    });
   }
 
   async getUser(id: number) {
@@ -35,9 +45,15 @@ export class UsersService {
     return this.userRepo.list();
   }
 
-  async updateUser(id: number, user: UpdateUserInput): Promise<UserM> {
-    const updateUserUseCase = new UpdateUserUseCase(this.userRepo);
-    return updateUserUseCase.execute(id, user);
+  async updateUser(
+    id: number,
+    updateUserInput: UpdateUserInput,
+  ): Promise<UserM> {
+    const exists = await this.userRepo.findById(id);
+    if (!exists) {
+      throw new ConflictException('User Not Found');
+    }
+    return this.userRepo.update(id, updateUserInput);
   }
 
   async deleteUser(id: number) {

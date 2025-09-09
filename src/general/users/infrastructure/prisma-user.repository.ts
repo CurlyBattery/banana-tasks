@@ -19,10 +19,17 @@ export class PrismaUserRepository implements UserRepository {
   async findByEmail(email: string): Promise<UserM> {
     return this.prisma.user.findUnique({ where: { email } });
   }
-  async update(id: number, user: Partial<UserM>): Promise<UserM> {
+  async update(
+    id: number,
+    { departmentId, email, fullName }: Partial<UserM>,
+  ): Promise<UserM> {
     return this.prisma.user.update({
       where: { id },
-      data: user,
+      data: {
+        departmentId,
+        email,
+        fullName,
+      },
     });
   }
   async delete(id: number): Promise<UserM> {

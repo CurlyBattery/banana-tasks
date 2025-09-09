@@ -1,6 +1,9 @@
+import { Exclude } from 'class-transformer';
+
 export class UserM {
   readonly id?: number;
   email: string;
+  @Exclude()
   passwordHash: string;
   fullName?: string;
   isActive: boolean;
@@ -9,4 +12,8 @@ export class UserM {
 
   createdAt?: Date;
   updatedAt?: Date;
+
+  constructor(partial: Partial<UserM>) {
+    Object.assign(this, partial);
+  }
 }

@@ -36,6 +36,10 @@ import { SeedModule } from '@seed/seed.module';
         },
         context: ({ req, res }) => ({ req, res }),
         sortSchema: true,
+        cors: {
+          credentials: true,
+          origin: true,
+        },
       }),
     }),
     GeneralModule,

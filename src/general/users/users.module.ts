@@ -9,9 +9,10 @@ import { UserResolver } from '@user/infrastructure/presentation/user.resolver';
 import { RegisterUserHandler } from '@user/application/handlers/register-user.handler';
 import { GetUserByEmailHandler } from '@user/application/handlers/get-user-by-email.handler';
 import { CheckPasswordHandler } from '@user/application/handlers/check-password.handler';
+import { GetUserByIdHandler } from '@user/application/handlers/get-user-by-id.handler';
 
 const CommandHandlers = [RegisterUserHandler, CheckPasswordHandler];
-const QueryHandlers = [GetUserByEmailHandler];
+const QueryHandlers = [GetUserByEmailHandler, GetUserByIdHandler];
 
 @Module({
   imports: [EncryptionModule, CqrsModule],

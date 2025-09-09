@@ -8,8 +8,7 @@ import {
 
 export class UpdateUserInput {
   @IsNumber()
-  @IsNotEmpty()
-  id: number;
+  id?: number;
 
   @IsEmail()
   @IsOptional()

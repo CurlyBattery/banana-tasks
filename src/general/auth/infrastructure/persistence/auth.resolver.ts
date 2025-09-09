@@ -5,7 +5,9 @@ import { CreateUserInput } from '@user/infrastructure/presentation/dto/create-us
 import { AuthService } from '@auth/application/auth.service';
 import { SignInInput } from '@auth/infrastructure/persistence/dto/sign-in.input';
 import { cookieFactory } from '../../../../global/libs/auth/cookie.lib';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
+import { AccessTokenGuard } from '@common/guards/access-token.guard';
+import { RefreshTokenGuard } from '@common/guards/refresh-token.guard';
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -30,38 +32,40 @@ export class AuthResolver {
     cookies.remove('access_token');
     cookies.remove('refresh_token');
 
-    cookies.set('access_token', accessToken, 1000 * 60 * 60);
+    cookies.set('access_token', accessToken, 1000 * 60 * 60 * 24);
     cookies.set('refresh_token', refreshToken, 1000 * 60 * 60 * 24 * 30);
 
     return { accessToken, refreshToken };
   }
 
+  @UseGuards(RefreshTokenGuard)
   @Mutation('refresh')
   async refreshTokens(@Context() context: { req: Request; res: Response }) {
     const { req, res } = context;
-    console.log(req);
     const cookies = cookieFactory(res, req);
 
-    const refresh = cookies.get('refresh_token');
-    console.log(refresh);
+    const userId = req.user['userId'];
+    const oldRefresh = cookies.get('refresh_token');
 
-    const { accessToken, refreshToken } =
-      await this.authService.refreshTokens(refresh);
+    const { accessToken, refreshToken } = await this.authService.refreshTokens(
+      userId,
+      oldRefresh,
+    );
 
     return { accessToken, refreshToken };
   }
 
+  @UseGuards(RefreshTokenGuard)
   @Query('logout')
   async logout(@Context() context: { req: Request; res: Response }) {
     const { req, res } = context;
     const cookies = cookieFactory(res, req);
 
-    const refresh = cookies.get('refresh_token');
-    console.log(refresh);
+    const userId = req.user['userId'];
 
-    const isDeleted = await this.authService.logout(refresh);
+    const isDeleted = await this.authService.logout(userId);
     if (!isDeleted) {
-      throw new BadRequestException('Error Delete Refresh');
+      throw new BadRequestException('Error Delete Refresh Token');
     }
 
     cookies.remove('access_token');
@@ -70,15 +74,17 @@ export class AuthResolver {
     return { message: 'Successfully Logout' };
   }
 
+  @UseGuards(AccessTokenGuard)
   @Query('me')
   async getAuthenticateUser(
     @Context() context: { req: Request; res: Response },
   ) {
-    const { req, res } = context;
-    const cookies = cookieFactory(res, req);
+    const { req } = context;
 
-    const accessToken = cookies.get('access_token');
+    const userId = req.user['sub'];
 
-    return this.authService.me(accessToken);
+    const user = await this.authService.me(userId);
+
+    return user;
   }
 }
