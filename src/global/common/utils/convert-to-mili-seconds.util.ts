@@ -1,4 +1,4 @@
-export function convertToSecondsUtil(timeStr: string): number {
+export function convertToMiliSecondsUtil(timeStr: string): number {
   if (!isNaN(timeStr as any)) {
     return parseInt(timeStr);
   }
@@ -27,5 +27,5 @@ export function convertToSecondsUtil(timeStr: string): number {
 
   const num = parseInt(timeStr.slice(0, -1));
 
-  return num * multiplier;
+  return num * multiplier * 1000;
 }

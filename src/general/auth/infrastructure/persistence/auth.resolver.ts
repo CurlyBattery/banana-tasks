@@ -8,6 +8,8 @@ import { cookieFactory } from '../../../../global/libs/auth/cookie.lib';
 import { BadRequestException, UseGuards } from '@nestjs/common';
 import { RefreshTokenGuard } from '@common/guards/refresh-token.guard';
 import { Public } from '@common/decorators/public.decorator';
+import { convertToMiliSecondsUtil } from '@common/utils/convert-to-mili-seconds.util';
+import { config } from '@common/config/config';
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -25,7 +27,6 @@ export class AuthResolver {
     @Context() context: { req: Request; res: Response },
     @Args('signInInput') signInInput: SignInInput,
   ) {
-    // установить в куки
     const { req, res } = context;
     const cookies = cookieFactory(res, req);
     const { accessToken, refreshToken } =
@@ -34,8 +35,16 @@ export class AuthResolver {
     cookies.remove('access_token');
     cookies.remove('refresh_token');
 
-    cookies.set('access_token', accessToken, 1000 * 60 * 60 * 24);
-    cookies.set('refresh_token', refreshToken, 1000 * 60 * 60 * 24 * 30);
+    cookies.set(
+      'access_token',
+      accessToken,
+      convertToMiliSecondsUtil(config().at_exp),
+    );
+    cookies.set(
+      'refresh_token',
+      refreshToken,
+      convertToMiliSecondsUtil(config().rt_exp),
+    );
 
     return { accessToken, refreshToken };
   }
