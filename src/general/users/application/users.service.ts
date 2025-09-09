@@ -26,8 +26,9 @@ export class UsersService {
       createUserInput.password,
     );
     return this.userRepo.create({
-      ...createUserInput,
-      isActive: true,
+      email: createUserInput.email,
+      departmentId: createUserInput.departmentId,
+      fullName: createUserInput.fullName,
       passwordHash,
     });
   }

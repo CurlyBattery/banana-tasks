@@ -6,7 +6,7 @@ export class UserM {
   @Exclude()
   passwordHash: string;
   fullName?: string;
-  isActive: boolean;
+  isActive?: boolean;
   timezone?: string;
   departmentId: number;
 

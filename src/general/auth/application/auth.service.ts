@@ -11,12 +11,13 @@ import { TokensM } from '@auth/domain/tokens';
 import { GetUserByEmailQuery } from '@user/domain/queries/get-user-by-email.query';
 import { CheckPasswordCommand } from '@user/domain/commands/check-password.command';
 import { ConfigService } from '@nestjs/config';
-import { convertToSecondsUtil } from '@common/utils/convert-to-seconds.util';
+import { convertToMiliSecondsUtil } from '@common/utils/convert-to-mili-seconds.util';
 import { addMilliseconds } from 'date-fns';
 import { EncryptionService } from '@hashing/application/encryption.service';
 import { GetUserByIdQuery } from '@user/domain/queries/get-user-by-id.query';
 import { UserPayload } from '@common/interfaces/user.payload';
 import { RefreshTokenPayload } from '@common/interfaces/refresh-token.payload';
+import { config } from '@common/config/config';
 
 @Injectable()
 export class AuthService {
@@ -83,8 +84,7 @@ export class AuthService {
   }
 
   private getRtExp(): Date {
-    const stringExp = this.configService.get<string>('RT_EXPIRES_IN');
-    const exp = convertToSecondsUtil(stringExp);
+    const exp = convertToMiliSecondsUtil(config().rt_exp);
     const expiresAt = addMilliseconds(new Date(), exp);
     return expiresAt;
   }
@@ -98,8 +98,8 @@ export class AuthService {
     refreshTokenPayload: RefreshTokenPayload,
   ): Promise<string> {
     const refreshToken = await this.jwtService.signAsync(refreshTokenPayload, {
-      secret: this.configService.get<string>('RT_JWT_SECRET'),
-      expiresIn: this.configService.get<string>('RT_EXPIRES_IN'),
+      secret: config().rt_secret,
+      expiresIn: config().rt_exp,
     });
     return refreshToken;
   }
@@ -115,7 +115,6 @@ export class AuthService {
     const refreshToken = await this.generateRt({ userId: user.id, expiresAt });
 
     const tokenHash = await this.encryptionService.hashPassword(refreshToken);
-
     await this.refreshRepo.save({
       expiresAt,
       tokenHash,

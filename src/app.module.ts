@@ -10,6 +10,7 @@ import { PrismaModule } from '@prisma/prisma.module';
 import { GeneralModule } from './general/general.module';
 import { TasksModule } from '@tasks/tasks.module';
 import { SeedModule } from '@seed/seed.module';
+import { config } from '@common/config/config';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { SeedModule } from '@seed/seed.module';
         RT_JWT_SECRET: Joi.string().required(),
         RT_EXPIRES_IN: Joi.string().required(),
       }),
+      load: [config],
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
