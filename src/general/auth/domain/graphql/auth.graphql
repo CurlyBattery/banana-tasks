@@ -1,0 +1,24 @@
+type Tokens {
+    accessToken: String!
+    refreshToken: String!
+}
+
+type Message {
+    message: String!
+}
+
+input SignInInput {
+    email: String!
+    password: String!
+}
+
+type Mutation {
+  signUp(createUserInput: CreateUserInput!): User!
+  signIn(signInInput: SignInInput): Tokens!
+  refresh: Tokens!
+}
+
+type Query {
+    logout: Message!
+    me: User!
+}

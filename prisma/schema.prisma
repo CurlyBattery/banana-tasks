@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -12,4 +6,109 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
+  passwordHash String  @map("password_hash")
+  fullName     String? @map("full_name")
+  isActive     Boolean @default(true)
+  timezone     String?
+  departmentId Int?    @map("department_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userRoles     UserRole[]
+  assignedTasks Task[]         @relation("assignedTo")
+  createdTasks  Task[]         @relation("createdBy")
+  notifications Notification[]
+  refreshTokens RefreshToken[]
+  department    Department?    @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+  @@map("users")
+}
+
+model Role {
+  id          Int     @id() @default(autoincrement())
+  name        String  @unique
+  description String?
+
+  userRoles UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  roleId     Int      @map("role_id")
+  userId     Int      @map("user_id")
+  assignedAt DateTime @default(now())
+
+  role Role @relation(fields: [roleId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+enum TaskStatus {
+  NEW
+  IN_PROGRES
+  DONE
+  OVERDUE
+}
+
+model Task {
+  id           Int        @id @default(autoincrement())
+  title        String
+  description  String?
+  status       TaskStatus @default(NEW)
+  priority     Int?       @default(0)
+  deadline     DateTime
+  assignedToId Int?       @map("assigned_to_id")
+  createdById  Int?       @map("created_by_id")
+
+  assignedTo User? @relation("assignedTo", fields: [assignedToId], references: [id])
+  createdBy  User? @relation("createdBy", fields: [createdById], references: [id])
+
+  @@map("tasks")
+}
+
+model Notification {
+  id      Int     @id @default(autoincrement())
+  userId  Int     @map("user_id")
+  type    String
+  payload Json?
+  isRead  Boolean @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @unique
+  tokenHash String   @unique
+  expiresAt DateTime @map("expires_at")
+  revoked   Boolean  @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  actor User? @relation(fields: [userId], references: [id])
+
+  @@map("refresh_tokens")
+}
+
+model Department {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  description String?
+
+  user User[]
+
+  @@map("departments")
 }

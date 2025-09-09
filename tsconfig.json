@@ -16,6 +16,22 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@user": ["src/general/users"],
+      "@user/*": ["src/general/users/*"],
+      "@auth": ["src/general/auth"],
+      "@auth/*": ["src/general/auth/*"],
+      "@prisma": ["src/global/libs/prisma"],
+      "@prisma/*": ["src/global/libs/prisma/*"],
+      "@hashing": ["src/global/libs/encryption"],
+      "@hashing/*": ["src/global/libs/encryption/*"],
+      "@common": ["src/global/common"],
+      "@common/*": ["src/global/common/*"],
+      "@seed": ["src/global/libs/seed"],
+      "@seed/*": ["src/global/libs/seed/*"],
+      "@tasks": ["src/apps/tasks"],
+      "@tasks/*": ["src/apps/tasks/*"],
+    }
   }
 }
