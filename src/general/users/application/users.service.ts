@@ -25,7 +25,6 @@ export class UsersService {
     const passwordHash = await this.encryptionService.hashPassword(
       createUserInput.password,
     );
-    delete createUserInput.password;
     return this.userRepo.create({
       ...createUserInput,
       isActive: true,
