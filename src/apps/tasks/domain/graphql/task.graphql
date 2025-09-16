@@ -25,7 +25,6 @@ input CreateTaskInput {
     priority: Int
     deadline: DateTime!
     assignedToId: Int
-    createdById: Int
 }
 
 input UpdateTaskInput {
@@ -40,7 +39,8 @@ input UpdateTaskStatusInput {
 }
 
 type Query {
-    getTasks: [Task]!
+    getMyTasks: [Task]!
+    getCreatorTasks: [Task]!
     getTask(id: Int!): Task
 }
 

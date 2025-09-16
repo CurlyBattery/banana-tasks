@@ -32,4 +32,8 @@ export class CreateTaskInput {
   @IsNumber()
   @IsNotEmpty()
   assignedToId: number;
+
+  @IsNumber()
+  @IsOptional()
+  createdById?: number;
 }

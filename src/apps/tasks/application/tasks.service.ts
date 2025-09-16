@@ -14,11 +14,21 @@ export class TasksService {
   }
 
   async getTask(id: number): Promise<TaskM> {
-    return this.getTask(id);
+    return this.taskRepo.findById(id);
   }
 
-  async listTasks() {
-    return this.taskRepo.list();
+  async listMyTasks(assignedToId: number) {
+    console.log(assignedToId);
+    return this.taskRepo.list({
+      assignedToId,
+    });
+  }
+
+  async listCreatorTasks(createdById: number) {
+    console.log(createdById);
+    return this.taskRepo.list({
+      createdById,
+    });
   }
 
   async updateTask(
