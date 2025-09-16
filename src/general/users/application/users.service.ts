@@ -1,9 +1,9 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-
 import { UserRepository } from '@user/domain/user.repository';
 import { UserM } from '@user/domain/user';
 import { CreateUserInput } from '@user/infrastructure/presentation/dto/create-user.input';
@@ -31,10 +31,14 @@ export class UsersService {
       departmentId: createUserInput.departmentId,
       fullName: createUserInput.fullName,
       passwordHash,
+      role: createUserInput.role,
     });
   }
 
-  async getUser(id: number) {
+  async getUser(id: number, authUserId: number) {
+    if (id !== authUserId) {
+      throw new ForbiddenException();
+    }
     const existsUser = await this.userRepo.findById(id);
     if (!existsUser) {
       throw new NotFoundException('User Not Found');

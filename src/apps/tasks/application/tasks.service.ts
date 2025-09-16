@@ -18,14 +18,12 @@ export class TasksService {
   }
 
   async listMyTasks(assignedToId: number) {
-    console.log(assignedToId);
     return this.taskRepo.list({
       assignedToId,
     });
   }
 
   async listCreatorTasks(createdById: number) {
-    console.log(createdById);
     return this.taskRepo.list({
       createdById,
     });

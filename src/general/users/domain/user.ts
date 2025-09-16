@@ -1,7 +1,9 @@
 import { Exclude } from 'class-transformer';
 
+import { Role } from 'generated/prisma';
+
 export class UserM {
-  id?: number;
+  readonly id?: number;
   email: string;
   @Exclude()
   passwordHash: string;
@@ -9,6 +11,7 @@ export class UserM {
   isActive?: boolean;
   timezone?: string;
   departmentId: number;
+  role?: Role;
 
   createdAt?: Date;
   updatedAt?: Date;

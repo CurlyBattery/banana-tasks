@@ -8,6 +8,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMINISTRATOR
+  MANAGER
+  HEAD_DEPARTMENT
+  DEVELOPER
+  SALESMAN
+}
+
 model User {
   id           Int     @id @default(autoincrement())
   email        String  @unique
@@ -16,11 +24,11 @@ model User {
   isActive     Boolean @default(true)
   timezone     String?
   departmentId Int     @map("department_id")
+  role         Role
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userRoles     UserRole[]
   assignedTasks Task[]         @relation("assignedTo")
   createdTasks  Task[]         @relation("createdBy")
   notifications Notification[]
@@ -28,28 +36,6 @@ model User {
   department    Department     @relation(fields: [departmentId], references: [id], onDelete: Cascade)
 
   @@map("users")
-}
-
-model Role {
-  id          Int     @id() @default(autoincrement())
-  name        String  @unique
-  description String?
-
-  userRoles UserRole[]
-
-  @@map("roles")
-}
-
-model UserRole {
-  roleId     Int      @map("role_id")
-  userId     Int      @map("user_id")
-  assignedAt DateTime @default(now())
-
-  role Role @relation(fields: [roleId], references: [id])
-  user User @relation(fields: [userId], references: [id])
-
-  @@id([userId, roleId])
-  @@map("user_roles")
 }
 
 enum TaskStatus {

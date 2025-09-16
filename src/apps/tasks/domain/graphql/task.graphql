@@ -21,7 +21,6 @@ type Task {
 input CreateTaskInput {
     title: String!
     description: String!
-    status: TaskStatus!
     priority: Int
     deadline: DateTime!
     assignedToId: Int
