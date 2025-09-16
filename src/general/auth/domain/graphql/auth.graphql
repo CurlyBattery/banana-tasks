@@ -3,8 +3,8 @@ type Tokens {
     refreshToken: String!
 }
 
-type Message {
-    message: String!
+type Success {
+    success: Boolean!
 }
 
 input SignInInput {
@@ -19,6 +19,6 @@ type Mutation {
 }
 
 type Query {
-    logout: Message!
+    logout: Success!
     me: User!
 }

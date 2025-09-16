@@ -32,9 +32,6 @@ export class AuthResolver {
     const { accessToken, refreshToken } =
       await this.authService.login(signInInput);
 
-    cookies.remove('access_token');
-    cookies.remove('refresh_token');
-
     cookies.set(
       'access_token',
       accessToken,
@@ -82,7 +79,7 @@ export class AuthResolver {
     cookies.remove('access_token');
     cookies.remove('refresh_token');
 
-    return { message: 'Successfully Logout' };
+    return { success: true };
   }
 
   @Query('me')
