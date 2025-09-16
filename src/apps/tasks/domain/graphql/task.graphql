@@ -1,0 +1,52 @@
+scalar DateTime
+
+enum TaskStatus {
+    NEW
+    IN_PROGRESS
+    DONE
+    OVERDUE
+}
+
+type Task {
+    id: Int
+    title: String!
+    description: String
+    status: TaskStatus!
+    priority: Int
+    deadline: DateTime!
+    assignedToId: Int
+    createdById: Int
+}
+
+input CreateTaskInput {
+    title: String!
+    description: String!
+    status: TaskStatus!
+    priority: Int
+    deadline: DateTime!
+    assignedToId: Int
+}
+
+input UpdateTaskInput {
+    title: String!
+    description: String!
+    priority: Int!
+    deadline: DateTime!
+}
+
+input UpdateTaskStatusInput {
+    status: TaskStatus!
+}
+
+type Query {
+    getMyTasks: [Task]!
+    getCreatorTasks: [Task]!
+    getTask(id: Int!): Task
+}
+
+type Mutation {
+    createTask(createTaskInput: CreateTaskInput!): Task!
+    updateTask(updateTaskInput: UpdateTaskInput!): Task!
+    updateTaskStatus(updateTaskStatusInput: UpdateTaskStatusInput!): Task!
+    removeTask(id: Int!): Boolean
+}

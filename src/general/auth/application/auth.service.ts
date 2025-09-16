@@ -10,7 +10,6 @@ import { SignInInput } from '@auth/infrastructure/persistence/dto/sign-in.input'
 import { TokensM } from '@auth/domain/tokens';
 import { GetUserByEmailQuery } from '@user/domain/queries/get-user-by-email.query';
 import { CheckPasswordCommand } from '@user/domain/commands/check-password.command';
-import { ConfigService } from '@nestjs/config';
 import { convertToMiliSecondsUtil } from '@common/utils/convert-to-mili-seconds.util';
 import { addMilliseconds } from 'date-fns';
 import { EncryptionService } from '@hashing/application/encryption.service';
@@ -26,7 +25,6 @@ export class AuthService {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
     private readonly encryptionService: EncryptionService,
   ) {}
 

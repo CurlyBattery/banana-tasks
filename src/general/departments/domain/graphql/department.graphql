@@ -1,0 +1,9 @@
+type Department {
+    id: Int
+    name: String!
+    description: String
+}
+
+type Query {
+    getDepartments: [Department]
+}

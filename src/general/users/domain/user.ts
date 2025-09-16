@@ -1,7 +1,7 @@
 import { Exclude } from 'class-transformer';
 
 export class UserM {
-  readonly id?: number;
+  id?: number;
   email: string;
   @Exclude()
   passwordHash: string;

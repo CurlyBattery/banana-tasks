@@ -26,6 +26,5 @@ const QueryHandlers = [GetUserByEmailHandler, GetUserByIdHandler];
     ...CommandHandlers,
     ...QueryHandlers,
   ],
-  exports: [],
 })
 export class UsersModule {}

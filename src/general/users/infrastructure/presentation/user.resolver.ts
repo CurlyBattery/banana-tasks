@@ -16,13 +16,13 @@ export class UserResolver {
   }
 
   @Mutation('updateUser')
-  update(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
+  async update(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
     const { id, ...data } = updateUserInput;
     return this.usersService.updateUser(id, data);
   }
 
   @Mutation('removeUser')
-  remove(@Args('id') id: number) {
+  async remove(@Args('id') id: number) {
     return this.usersService.deleteUser(id);
   }
 
