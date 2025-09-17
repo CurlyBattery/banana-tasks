@@ -17,7 +17,7 @@ export enum Role {
 
 export enum TaskStatus {
   DONE = 'DONE',
-  IN_PROGRESS = 'IN_PROGRESS',
+  IN_PROGRES = 'IN_PROGRES',
   NEW = 'NEW',
   OVERDUE = 'OVERDUE',
 }
@@ -46,11 +46,13 @@ export interface SignInInput {
 export interface UpdateTaskInput {
   deadline: DateTime;
   description: string;
+  id: number;
   priority: number;
   title: string;
 }
 
 export interface UpdateTaskStatusInput {
+  id: number;
   status: TaskStatus;
 }
 
@@ -71,7 +73,7 @@ export interface IMutation {
   createTask(createTaskInput: CreateTaskInput): Task | Promise<Task>;
   createUser(createUserInput: CreateUserInput): User | Promise<User>;
   refresh(): Tokens | Promise<Tokens>;
-  removeTask(id: number): Nullable<boolean> | Promise<Nullable<boolean>>;
+  removeTask(id: number): Task | Promise<Task>;
   removeUser(id: number): Nullable<boolean> | Promise<Nullable<boolean>>;
   signIn(signInInput?: Nullable<SignInInput>): Tokens | Promise<Tokens>;
   signUp(createUserInput: CreateUserInput): User | Promise<User>;

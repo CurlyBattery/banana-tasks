@@ -1,5 +1,5 @@
-import { TaskStatus } from '../../../../../../generated/prisma';
 import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
+import { TaskStatus } from '../../../../../generated/graphql';
 
 export class UpdateTaskStatusInput {
   @IsNumber()
@@ -7,5 +7,5 @@ export class UpdateTaskStatusInput {
 
   @IsEnum(TaskStatus)
   @IsNotEmpty()
-  taskStatus: TaskStatus;
+  status: TaskStatus;
 }

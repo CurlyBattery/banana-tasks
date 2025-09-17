@@ -24,6 +24,15 @@ export class PrismaTaskRepository implements TaskRepository {
       data: task,
     });
   }
+  updateMany(
+    where: Prisma.TaskWhereInput,
+    task: Partial<TaskM>,
+  ): Promise<TaskM[]> {
+    return this.prisma.task.updateManyAndReturn({
+      where,
+      data: task,
+    });
+  }
   delete(id: number): Promise<TaskM> {
     return this.prisma.task.delete({
       where: { id },

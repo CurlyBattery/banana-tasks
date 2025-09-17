@@ -1,5 +1,4 @@
 import {
-  IsDateString,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -25,7 +24,7 @@ export class CreateTaskInput {
   @IsOptional()
   priority?: number;
 
-  @IsDateString()
+  @IsString()
   @IsNotEmpty()
   deadline: Date;
 

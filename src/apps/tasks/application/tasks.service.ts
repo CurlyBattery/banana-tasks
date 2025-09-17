@@ -4,6 +4,8 @@ import { TaskM } from '@tasks/domain/task';
 import { CreateTaskInput } from '@tasks/infrastructure/persistence/dto/create-task.input';
 import { UpdateTaskInput } from '@tasks/infrastructure/persistence/dto/update-task.input';
 import { UpdateTaskStatusInput } from '@tasks/infrastructure/persistence/dto/update-task-status.input';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { TaskStatus } from '../../../../generated/prisma';
 
 @Injectable()
 export class TasksService {
@@ -46,11 +48,25 @@ export class TasksService {
     updateTaskStatusInput: UpdateTaskStatusInput,
   ): Promise<TaskM> {
     return this.taskRepo.update(id, {
-      taskStatus: updateTaskStatusInput.taskStatus,
+      status: updateTaskStatusInput.status,
     });
   }
 
   async deleteTask(id: number): Promise<TaskM> {
     return this.taskRepo.delete(id);
+  }
+
+  @Cron(CronExpression.EVERY_MINUTE)
+  async setOverdueStatus() {
+    return this.taskRepo.updateMany(
+      {
+        deadline: {
+          lte: new Date(),
+        },
+      },
+      {
+        status: TaskStatus.OVERDUE,
+      },
+    );
   }
 }

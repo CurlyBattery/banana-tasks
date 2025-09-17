@@ -27,6 +27,7 @@ export class TaskResolver {
     const task = await this.tasksService.createTask({
       ...createTaskInput,
       createdById: userId,
+      deadline: new Date(createTaskInput.deadline),
     });
     return new TaskM({ ...task });
   }
@@ -41,7 +42,7 @@ export class TaskResolver {
   @UseGuards(RoleGuard([Role.DEVELOPER, Role.MANAGER, Role.SALESMAN]))
   @Mutation('updateTaskStatus')
   async updateStatus(
-    @Args('updateTaskInput') updateTaskStatusInput: UpdateTaskStatusInput,
+    @Args('updateTaskStatusInput') updateTaskStatusInput: UpdateTaskStatusInput,
   ) {
     const { id, ...data } = updateTaskStatusInput;
     return this.tasksService.updateTaskStatus(id, data);
