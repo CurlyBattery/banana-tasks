@@ -30,8 +30,13 @@ input UpdateUserInput {
   departmentId: Int
 }
 
+input UserFilterQuery {
+  isActive: Boolean
+  departmentId: Int
+}
+
 type Query {
-  getUsers: [User]!
+  getUsers(query: UserFilterQuery): [User]!
   getUser(id: Int!): User
 }
 

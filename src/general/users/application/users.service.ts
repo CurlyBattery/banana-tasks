@@ -10,6 +10,7 @@ import { UserM } from '@user/domain/user';
 import { CreateUserInput } from '@user/infrastructure/presentation/dto/create-user.input';
 import { EncryptionService } from '@hashing/application/encryption.service';
 import { UpdateUserInput } from '@user/infrastructure/presentation/dto/update-user.input';
+import { UserFilterQuery } from '@user/infrastructure/presentation/dto/user-filter.query';
 
 @Injectable()
 export class UsersService {
@@ -47,8 +48,8 @@ export class UsersService {
     return existsUser;
   }
 
-  async listUsers() {
-    return this.userRepo.list();
+  async listUsers(query?: UserFilterQuery) {
+    return this.userRepo.list(query);
   }
 
   async updateUser(

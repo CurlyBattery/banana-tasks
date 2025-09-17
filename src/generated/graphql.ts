@@ -64,6 +64,11 @@ export interface UpdateUserInput {
     name?: Nullable<string>;
 }
 
+export interface UserFilterQuery {
+    departmentId?: Nullable<number>;
+    isActive?: Nullable<boolean>;
+}
+
 export interface Department {
     description?: Nullable<string>;
     id?: Nullable<number>;
@@ -89,7 +94,7 @@ export interface IQuery {
     getMyTasks(): Nullable<Task>[] | Promise<Nullable<Task>[]>;
     getTask(id: number): Nullable<Task> | Promise<Nullable<Task>>;
     getUser(id: number): Nullable<User> | Promise<Nullable<User>>;
-    getUsers(): Nullable<User>[] | Promise<Nullable<User>[]>;
+    getUsers(query?: Nullable<UserFilterQuery>): Nullable<User>[] | Promise<Nullable<User>[]>;
     logout(): Success | Promise<Success>;
     me(): User | Promise<User>;
 }

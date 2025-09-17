@@ -1,13 +1,14 @@
 import { Mutation, Query, Resolver, Args, Context } from '@nestjs/graphql';
 import { Request, Response } from 'express';
+import { UseGuards } from '@nestjs/common';
 
 import { UsersService } from '@user/application/users.service';
 import { CreateUserInput } from '@user/infrastructure/presentation/dto/create-user.input';
 import { UpdateUserInput } from '@user/infrastructure/presentation/dto/update-user.input';
 import { UserM } from '@user/domain/user';
-import { UseGuards } from '@nestjs/common';
 import RoleGuard from '@common/guards/roles.guard';
-import { Role } from '../../../../../generated/prisma';
+import { Role } from 'generated/prisma';
+import { UserFilterQuery } from '@user/infrastructure/presentation/dto/user-filter.query';
 
 @Resolver('User')
 export class UserResolver {
@@ -40,8 +41,8 @@ export class UserResolver {
 
   @UseGuards(RoleGuard([Role.ADMINISTRATOR, Role.HEAD_DEPARTMENT]))
   @Query('getUsers')
-  findAll() {
-    return this.usersService.listUsers();
+  findAll(@Args('query') query?: UserFilterQuery) {
+    return this.usersService.listUsers(query);
   }
 
   @Query('getUser')

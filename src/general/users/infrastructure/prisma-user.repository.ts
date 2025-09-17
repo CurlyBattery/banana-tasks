@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { Prisma } from 'generated/prisma';
 import { UserM } from '@user/domain/user';
 import { UserRepository } from '@user/domain/user.repository';
 import { PrismaService } from '@prisma/application/prisma.service';
@@ -41,7 +42,9 @@ export class PrismaUserRepository implements UserRepository {
   async delete(id: number): Promise<UserM> {
     return this.prisma.user.delete({ where: { id } });
   }
-  async list(): Promise<UserM[]> {
-    return this.prisma.user.findMany();
+  async list(where?: Prisma.UserWhereInput): Promise<UserM[]> {
+    return this.prisma.user.findMany({
+      where,
+    });
   }
 }
