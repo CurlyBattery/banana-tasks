@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -61,7 +62,10 @@ export class UsersService {
     return this.userRepo.update(id, updateUserInput);
   }
 
-  async deleteUser(id: number) {
+  async deleteUser(id: number, authUserId: number) {
+    if (id === authUserId) {
+      throw new BadRequestException('You Can Not Delete Yourself');
+    }
     const existsUser = await this.userRepo.findById(id);
     if (!existsUser) {
       throw new NotFoundException('User Not Found');

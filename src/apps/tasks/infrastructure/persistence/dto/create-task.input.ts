@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { TaskStatus } from '../../../../../../generated/prisma';
+import { TaskStatus } from 'generated/prisma';
 
 export class CreateTaskInput {
   @IsString()

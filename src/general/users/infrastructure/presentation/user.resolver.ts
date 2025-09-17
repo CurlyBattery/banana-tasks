@@ -28,8 +28,14 @@ export class UserResolver {
 
   @UseGuards(RoleGuard([Role.ADMINISTRATOR]))
   @Mutation('removeUser')
-  remove(@Args('id') id: number) {
-    return this.usersService.deleteUser(id);
+  remove(
+    @Args('id') id: number,
+    @Context() context: { req: Request; res: Response },
+  ) {
+    const { req } = context;
+
+    const userId = req.user['sub'];
+    return this.usersService.deleteUser(id, userId);
   }
 
   @UseGuards(RoleGuard([Role.ADMINISTRATOR, Role.HEAD_DEPARTMENT]))
