@@ -61,6 +61,7 @@ export interface UpdateUserInput {
     departmentId?: Nullable<number>;
     email?: Nullable<string>;
     id: number;
+    isActive?: Nullable<boolean>;
     name?: Nullable<string>;
 }
 

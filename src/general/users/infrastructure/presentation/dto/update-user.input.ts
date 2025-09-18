@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsNumber,
@@ -21,6 +22,10 @@ export class UpdateUserInput {
   @IsString()
   @IsOptional()
   timezone?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
 
   @IsNotEmpty()
   @IsOptional()

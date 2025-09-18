@@ -27,6 +27,7 @@ input UpdateUserInput {
   id: Int!
   email: String
   name: String
+  isActive: Boolean
   departmentId: Int
 }
 
