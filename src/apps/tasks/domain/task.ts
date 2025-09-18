@@ -4,7 +4,7 @@ export class TaskM {
   id?: number;
   title: string;
   description?: string;
-  taskStatus?: TaskStatus;
+  status?: TaskStatus;
   priority?: number;
   deadline: Date;
   assignedToId?: number;

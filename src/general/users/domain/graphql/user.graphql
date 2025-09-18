@@ -1,10 +1,18 @@
+enum Role {
+  ADMINISTRATOR
+  MANAGER
+  HEAD_DEPARTMENT
+  DEVELOPER
+  SALESMAN
+}
 
 type User {
-   id: Int
+  id: Int
   email: String!
   fullName: String
   isActive: Boolean
   departmentId: Int
+  role: Role
 }
 
 input CreateUserInput {
@@ -12,17 +20,24 @@ input CreateUserInput {
   password: String!
   fullName: String!
   departmentId: Int
+  role: Role
 }
 
 input UpdateUserInput {
   id: Int!
   email: String
   name: String
+  isActive: Boolean
+  departmentId: Int
+}
+
+input UserFilterQuery {
+  isActive: Boolean
   departmentId: Int
 }
 
 type Query {
-  getUsers: [User]!
+  getUsers(query: UserFilterQuery): [User]!
   getUser(id: Int!): User
 }
 

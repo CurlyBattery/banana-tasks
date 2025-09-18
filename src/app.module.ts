@@ -11,6 +11,7 @@ import { GeneralModule } from './general/general.module';
 import { TasksModule } from '@tasks/tasks.module';
 import { SeedModule } from '@seed/seed.module';
 import { config } from '@common/config/config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { config } from '@common/config/config';
     TasksModule,
     PrismaModule,
     SeedModule,
+    ScheduleModule.forRoot(),
   ],
 })
 export class AppModule {}

@@ -8,9 +8,17 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export enum Role {
+    ADMINISTRATOR = "ADMINISTRATOR",
+    DEVELOPER = "DEVELOPER",
+    HEAD_DEPARTMENT = "HEAD_DEPARTMENT",
+    MANAGER = "MANAGER",
+    SALESMAN = "SALESMAN"
+}
+
 export enum TaskStatus {
     DONE = "DONE",
-    IN_PROGRESS = "IN_PROGRESS",
+    IN_PROGRES = "IN_PROGRES",
     NEW = "NEW",
     OVERDUE = "OVERDUE"
 }
@@ -20,7 +28,6 @@ export interface CreateTaskInput {
     deadline: DateTime;
     description: string;
     priority?: Nullable<number>;
-    status: TaskStatus;
     title: string;
 }
 
@@ -29,6 +36,7 @@ export interface CreateUserInput {
     email: string;
     fullName: string;
     password: string;
+    role?: Nullable<Role>;
 }
 
 export interface SignInInput {
@@ -39,11 +47,13 @@ export interface SignInInput {
 export interface UpdateTaskInput {
     deadline: DateTime;
     description: string;
+    id: number;
     priority: number;
     title: string;
 }
 
 export interface UpdateTaskStatusInput {
+    id: number;
     status: TaskStatus;
 }
 
@@ -51,7 +61,13 @@ export interface UpdateUserInput {
     departmentId?: Nullable<number>;
     email?: Nullable<string>;
     id: number;
+    isActive?: Nullable<boolean>;
     name?: Nullable<string>;
+}
+
+export interface UserFilterQuery {
+    departmentId?: Nullable<number>;
+    isActive?: Nullable<boolean>;
 }
 
 export interface Department {
@@ -64,7 +80,7 @@ export interface IMutation {
     createTask(createTaskInput: CreateTaskInput): Task | Promise<Task>;
     createUser(createUserInput: CreateUserInput): User | Promise<User>;
     refresh(): Tokens | Promise<Tokens>;
-    removeTask(id: number): Nullable<boolean> | Promise<Nullable<boolean>>;
+    removeTask(id: number): Task | Promise<Task>;
     removeUser(id: number): Nullable<boolean> | Promise<Nullable<boolean>>;
     signIn(signInInput?: Nullable<SignInInput>): Tokens | Promise<Tokens>;
     signUp(createUserInput: CreateUserInput): User | Promise<User>;
@@ -79,7 +95,7 @@ export interface IQuery {
     getMyTasks(): Nullable<Task>[] | Promise<Nullable<Task>[]>;
     getTask(id: number): Nullable<Task> | Promise<Nullable<Task>>;
     getUser(id: number): Nullable<User> | Promise<Nullable<User>>;
-    getUsers(): Nullable<User>[] | Promise<Nullable<User>[]>;
+    getUsers(query?: Nullable<UserFilterQuery>): Nullable<User>[] | Promise<Nullable<User>[]>;
     logout(): Success | Promise<Success>;
     me(): User | Promise<User>;
 }
@@ -110,6 +126,7 @@ export interface User {
     fullName?: Nullable<string>;
     id?: Nullable<number>;
     isActive?: Nullable<boolean>;
+    role?: Nullable<Role>;
 }
 
 export type DateTime = any;

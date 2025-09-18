@@ -1,12 +1,11 @@
 import {
-  IsDateString,
   IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
-import { TaskStatus } from '../../../../../../generated/prisma';
+import { TaskStatus } from 'generated/prisma';
 
 export class CreateTaskInput {
   @IsString()
@@ -25,7 +24,7 @@ export class CreateTaskInput {
   @IsOptional()
   priority?: number;
 
-  @IsDateString()
+  @IsString()
   @IsNotEmpty()
   deadline: Date;
 

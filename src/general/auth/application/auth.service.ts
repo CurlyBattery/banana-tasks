@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
+import { addMilliseconds } from 'date-fns';
 
 import { RefreshRepository } from '@auth/domain/refresh.repository';
 import { CreateUserInput } from '@user/infrastructure/presentation/dto/create-user.input';
@@ -11,7 +12,6 @@ import { TokensM } from '@auth/domain/tokens';
 import { GetUserByEmailQuery } from '@user/domain/queries/get-user-by-email.query';
 import { CheckPasswordCommand } from '@user/domain/commands/check-password.command';
 import { convertToMiliSecondsUtil } from '@common/utils/convert-to-mili-seconds.util';
-import { addMilliseconds } from 'date-fns';
 import { EncryptionService } from '@hashing/application/encryption.service';
 import { GetUserByIdQuery } from '@user/domain/queries/get-user-by-id.query';
 import { UserPayload } from '@common/interfaces/user.payload';
@@ -106,6 +106,7 @@ export class AuthService {
     const accessToken = await this.generateAt({
       sub: user.id,
       email: user.email,
+      role: user.role,
     });
 
     const expiresAt = this.getRtExp();

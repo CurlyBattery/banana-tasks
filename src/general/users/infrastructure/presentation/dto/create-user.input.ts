@@ -1,4 +1,11 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { Role } from 'generated/prisma';
 
 export class CreateUserInput {
   @IsEmail()
@@ -20,4 +27,8 @@ export class CreateUserInput {
   @IsNotEmpty()
   @IsNotEmpty()
   departmentId: number;
+
+  @IsNotEmpty()
+  @IsEnum(Role)
+  role: Role;
 }
