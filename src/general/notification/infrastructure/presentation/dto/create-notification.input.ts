@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateNotificationInput {
   @IsString()
@@ -8,4 +8,8 @@ export class CreateNotificationInput {
   @IsString()
   @IsNotEmpty()
   data: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
 }

@@ -1,0 +1,17 @@
+type Notification {
+    id: Int
+    title: String
+    data: String
+    userId: Int
+    isRead: Boolean
+
+    createdAt: DateTime
+}
+
+type Mutation {
+    updateRead: Notification!
+}
+
+type Query {
+    getNotifications: [Notification]!
+}
