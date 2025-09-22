@@ -22,8 +22,8 @@ export class TasksService {
     await this.commandBus.execute(
       new SendNotificationCommand(
         createTaskInput.assignedToId,
+        `Новая задача.`,
         `Задача создана: ${createTaskInput.title}.`,
-        `Описание: ${createTaskInput.description}.`,
       ),
     );
 
@@ -50,21 +50,41 @@ export class TasksService {
     id: number,
     updateTaskInput: UpdateTaskInput,
   ): Promise<TaskM> {
-    return this.taskRepo.update(id, {
+    const task = await this.taskRepo.update(id, {
       title: updateTaskInput.title,
       description: updateTaskInput.description,
       priority: updateTaskInput.priority,
       deadline: updateTaskInput.deadline,
     });
+
+    await this.commandBus.execute(
+      new SendNotificationCommand(
+        task.assignedToId,
+        `Изменение задачи.`,
+        `Теперь задачи выглядит вот так: \nДедлайн: ${task.deadline}\nНазвание: ${task.title}\nОписание: ${task.description}\nПриоритет: ${task.priority}`,
+      ),
+    );
+
+    return task;
   }
 
   async updateTaskStatus(
     id: number,
     updateTaskStatusInput: UpdateTaskStatusInput,
   ): Promise<TaskM> {
-    return this.taskRepo.update(id, {
+    const task = await this.taskRepo.update(id, {
       status: updateTaskStatusInput.status,
     });
+
+    await this.commandBus.execute(
+      new SendNotificationCommand(
+        task.createdById,
+        `Изменение статуса.`,
+        `У задачи ${task.title} изменен статус на ${task.status}.`,
+      ),
+    );
+
+    return task;
   }
 
   async deleteTask(id: number): Promise<TaskM> {
@@ -93,8 +113,8 @@ export class TasksService {
       await this.commandBus.execute(
         new SendNotificationCommand(
           value.assignedToId,
+          `Окончание дедлайна.`,
           `Задача просрочена: ${value.title}.`,
-          '',
         ),
       );
     }
