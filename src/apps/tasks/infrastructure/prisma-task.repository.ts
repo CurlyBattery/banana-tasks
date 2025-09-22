@@ -27,10 +27,12 @@ export class PrismaTaskRepository implements TaskRepository {
   updateMany(
     where: Prisma.TaskWhereInput,
     task: Partial<TaskM>,
+    select?: Prisma.TaskSelect,
   ): Promise<TaskM[]> {
     return this.prisma.task.updateManyAndReturn({
       where,
       data: task,
+      select,
     });
   }
   delete(id: number): Promise<TaskM> {

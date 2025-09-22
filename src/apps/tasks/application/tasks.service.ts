@@ -6,13 +6,28 @@ import { UpdateTaskInput } from '@tasks/infrastructure/persistence/dto/update-ta
 import { UpdateTaskStatusInput } from '@tasks/infrastructure/persistence/dto/update-task-status.input';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { TaskStatus } from '../../../../generated/prisma';
+import { CommandBus } from '@nestjs/cqrs';
+import { SendNotificationCommand } from '@notification/domain/commands/send-notification.command';
 
 @Injectable()
 export class TasksService {
-  constructor(private readonly taskRepo: TaskRepository) {}
+  constructor(
+    private readonly taskRepo: TaskRepository,
+    private readonly commandBus: CommandBus,
+  ) {}
 
   async createTask(createTaskInput: CreateTaskInput): Promise<TaskM> {
-    return this.taskRepo.create(createTaskInput);
+    const task = await this.taskRepo.create(createTaskInput);
+
+    await this.commandBus.execute(
+      new SendNotificationCommand(
+        createTaskInput.assignedToId,
+        `Задача создана: ${createTaskInput.title}.`,
+        `Описание: ${createTaskInput.description}.`,
+      ),
+    );
+
+    return task;
   }
 
   async getTask(id: number): Promise<TaskM> {
@@ -58,7 +73,7 @@ export class TasksService {
 
   @Cron(CronExpression.EVERY_MINUTE)
   async setOverdueStatus() {
-    return this.taskRepo.updateMany(
+    const tasks = await this.taskRepo.updateMany(
       {
         deadline: {
           lte: new Date(),
@@ -67,6 +82,23 @@ export class TasksService {
       {
         status: TaskStatus.OVERDUE,
       },
+      {
+        id: true,
+        title: true,
+        createdById: true,
+      },
     );
+
+    for (const value of tasks) {
+      await this.commandBus.execute(
+        new SendNotificationCommand(
+          value.assignedToId,
+          `Задача просрочена: ${value.title}.`,
+          '',
+        ),
+      );
+    }
+
+    return tasks;
   }
 }

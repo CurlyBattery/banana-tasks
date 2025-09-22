@@ -8,6 +8,7 @@ export abstract class TaskRepository {
   abstract updateMany(
     where: Prisma.TaskWhereInput,
     task: Partial<TaskM>,
+    select?: Prisma.TaskSelect,
   ): Promise<TaskM[]>;
   abstract delete(id: number): Promise<TaskM>;
   abstract list(where?: Prisma.TaskWhereInput): Promise<TaskM[]>;

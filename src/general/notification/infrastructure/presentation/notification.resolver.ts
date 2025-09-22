@@ -28,6 +28,6 @@ export class NotificationResolver {
     const { req } = context;
 
     const userId = req.user['sub'];
-    return this.notificationService.createNotification(userId);
+    return this.notificationService.getUserNotifications(userId);
   }
 }
