@@ -87,6 +87,8 @@ export class TasksService {
       deadline: updateTaskInput.deadline,
     });
 
+    await this.tasksSearchService.update(task);
+
     await this.commandBus.execute(
       new SendNotificationCommand(
         task.assignedToId,
@@ -118,7 +120,11 @@ export class TasksService {
   }
 
   async deleteTask(id: number): Promise<TaskM> {
-    return this.taskRepo.delete(id);
+    const task = await this.taskRepo.delete(id);
+
+    await this.tasksSearchService.remove(id);
+
+    return task;
   }
 
   @Cron(CronExpression.EVERY_MINUTE)
