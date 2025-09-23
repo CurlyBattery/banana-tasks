@@ -40,8 +40,8 @@ input UpdateTaskStatusInput {
 }
 
 type Query {
-    getMyTasks: [Task]!
-    getCreatorTasks: [Task]!
+    getMyTasks(search: String): [Task]!
+    getCreatorTasks(search: String): [Task]!
     getTask(id: Int!): Task
 }
 

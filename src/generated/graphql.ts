@@ -100,9 +100,9 @@ export interface Notification {
 }
 
 export interface IQuery {
-    getCreatorTasks(): Nullable<Task>[] | Promise<Nullable<Task>[]>;
+    getCreatorTasks(search?: Nullable<string>): Nullable<Task>[] | Promise<Nullable<Task>[]>;
     getDepartments(): Nullable<Nullable<Department>[]> | Promise<Nullable<Nullable<Department>[]>>;
-    getMyTasks(): Nullable<Task>[] | Promise<Nullable<Task>[]>;
+    getMyTasks(search?: Nullable<string>): Nullable<Task>[] | Promise<Nullable<Task>[]>;
     getNotifications(): Nullable<Notification>[] | Promise<Nullable<Notification>[]>;
     getTask(id: number): Nullable<Task> | Promise<Nullable<Task>>;
     getUser(id: number): Nullable<User> | Promise<Nullable<User>>;

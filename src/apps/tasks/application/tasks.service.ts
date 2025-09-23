@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
+import { Cron, CronExpression } from '@nestjs/schedule';
+
+import { TaskStatus } from 'generated/prisma';
 import { TaskRepository } from '@tasks/domain/task.repository';
 import { TaskM } from '@tasks/domain/task';
 import { CreateTaskInput } from '@tasks/infrastructure/persistence/dto/create-task.input';
 import { UpdateTaskInput } from '@tasks/infrastructure/persistence/dto/update-task.input';
 import { UpdateTaskStatusInput } from '@tasks/infrastructure/persistence/dto/update-task-status.input';
-import { Cron, CronExpression } from '@nestjs/schedule';
-import { TaskStatus } from '../../../../generated/prisma';
-import { CommandBus } from '@nestjs/cqrs';
 import { SendNotificationCommand } from '@notification/domain/commands/send-notification.command';
+import { TasksSearchService } from '@tasks/application/tasks-search.service';
 
 @Injectable()
 export class TasksService {
   constructor(
     private readonly taskRepo: TaskRepository,
     private readonly commandBus: CommandBus,
+    private readonly tasksSearchService: TasksSearchService,
   ) {}
 
   async createTask(createTaskInput: CreateTaskInput): Promise<TaskM> {
@@ -26,6 +29,7 @@ export class TasksService {
         `Задача создана: ${createTaskInput.title}.`,
       ),
     );
+    await this.tasksSearchService.indexTask(task);
 
     return task;
   }
@@ -34,16 +38,42 @@ export class TasksService {
     return this.taskRepo.findById(id);
   }
 
-  async listMyTasks(assignedToId: number) {
-    return this.taskRepo.list({
+  async listMyTasks(assignedToId: number, text?: string) {
+    if (!text) {
+      return this.taskRepo.list({
+        assignedToId,
+      });
+    }
+    const results = await this.tasksSearchService.search(text);
+    const ids = results.map((task) => task.id);
+    if (!ids.length) {
+      return [];
+    }
+    const tasks = await this.taskRepo.list({
+      id: { in: ids },
       assignedToId,
     });
+
+    return tasks;
   }
 
-  async listCreatorTasks(createdById: number) {
-    return this.taskRepo.list({
+  async listCreatorTasks(createdById: number, text?: string) {
+    if (!text) {
+      return this.taskRepo.list({
+        createdById,
+      });
+    }
+    const results = await this.tasksSearchService.search(text);
+    const ids = results.map((task) => task.id);
+    if (!ids.length) {
+      return [];
+    }
+    const tasks = await this.taskRepo.list({
+      id: { in: ids },
       createdById,
     });
+
+    return tasks;
   }
 
   async updateTask(
@@ -106,8 +136,12 @@ export class TasksService {
         id: true,
         title: true,
         createdById: true,
+        assignedToId: true,
       },
     );
+    if (tasks.length === 0) {
+      return tasks;
+    }
 
     for (const value of tasks) {
       await this.commandBus.execute(

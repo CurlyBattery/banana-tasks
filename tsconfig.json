@@ -36,6 +36,8 @@
       "@seed/*": ["src/global/libs/seed/*"],
       "@tasks": ["src/apps/tasks"],
       "@tasks/*": ["src/apps/tasks/*"],
+      "@search": ["src/general/search"],
+      "@search/*": ["src/general/search/*"]
     }
   }
 }
