@@ -70,7 +70,6 @@ export class TasksSearchService {
       title: task.title,
       description: task.description,
     };
-    console.log(newBody);
 
     const script = Object.entries(newBody).reduce((result, [key, value]) => {
       if (typeof value === 'number') {

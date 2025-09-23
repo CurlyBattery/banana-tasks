@@ -134,6 +134,9 @@ export class TasksService {
         deadline: {
           lte: new Date(),
         },
+        status: {
+          notIn: [TaskStatus.OVERDUE],
+        },
       },
       {
         status: TaskStatus.OVERDUE,
