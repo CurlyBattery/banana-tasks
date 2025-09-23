@@ -49,7 +49,9 @@ export class UsersService {
   }
 
   async listUsers(query?: UserFilterQuery) {
-    return this.userRepo.list(query);
+    const users = await this.userRepo.list(query);
+    console.log(users);
+    return users;
   }
 
   async updateUser(

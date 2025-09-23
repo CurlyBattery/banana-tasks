@@ -5,7 +5,6 @@ export const Cookie = createParamDecorator(
   (key: string, ctx: ExecutionContext) => {
     const gqlCtx = GqlExecutionContext.create(ctx);
     const request = gqlCtx.getContext().req;
-    console.log(request.cookies);
 
     if (!request || !request.cookies) return null;
 

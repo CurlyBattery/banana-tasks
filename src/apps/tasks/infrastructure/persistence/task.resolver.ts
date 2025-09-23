@@ -8,12 +8,11 @@ import { UpdateTaskStatusInput } from '@tasks/infrastructure/persistence/dto/upd
 import { Request, Response } from 'express';
 import { UseGuards } from '@nestjs/common';
 import RoleGuard from '@common/guards/roles.guard';
-import { Role } from '../../../../../generated/prisma';
+import { Role } from 'generated/prisma';
 
 @Resolver('Task')
 export class TaskResolver {
   constructor(private readonly tasksService: TasksService) {}
-
   @Mutation('createTask')
   @UseGuards(RoleGuard([Role.HEAD_DEPARTMENT]))
   async create(
@@ -56,22 +55,28 @@ export class TaskResolver {
 
   @UseGuards(RoleGuard([Role.DEVELOPER, Role.MANAGER, Role.SALESMAN]))
   @Query('getMyTasks')
-  async findMy(@Context() context: { req: Request; res: Response }) {
+  async findMy(
+    @Context() context: { req: Request; res: Response },
+    @Args('search') search?: string,
+  ) {
     const { req } = context;
 
     const assignedToId = req.user['sub'];
 
-    return this.tasksService.listMyTasks(assignedToId);
+    return this.tasksService.listMyTasks(assignedToId, search);
   }
 
   @UseGuards(RoleGuard([Role.HEAD_DEPARTMENT]))
   @Query('getCreatorTasks')
-  async findByCreator(@Context() context: { req: Request; res: Response }) {
+  async findByCreator(
+    @Context() context: { req: Request; res: Response },
+    @Args('search') search?: string,
+  ) {
     const { req } = context;
 
     const createdById = req.user['sub'];
 
-    return this.tasksService.listCreatorTasks(createdById);
+    return this.tasksService.listCreatorTasks(createdById, search);
   }
 
   @UseGuards(

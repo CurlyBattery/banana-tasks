@@ -62,15 +62,15 @@ model Task {
 }
 
 model Notification {
-  id      Int     @id @default(autoincrement())
-  userId  Int     @map("user_id")
-  type    String
-  payload Json?
-  isRead  Boolean @default(false)
+  id     Int     @id @default(autoincrement())
+  userId Int     @map("user_id")
+  title  String
+  data   String
+  isRead Boolean @default(false)
 
   createdAt DateTime @default(now()) @map("created_at")
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("notifications")
 }
