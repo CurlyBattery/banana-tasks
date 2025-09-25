@@ -9,6 +9,7 @@ export class TaskM {
   deadline: Date;
   assignedToId?: number;
   createdById?: number;
+  createdAt?: Date;
 
   constructor(partial: Partial<TaskM>) {
     Object.assign(this, partial);

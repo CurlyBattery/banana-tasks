@@ -58,6 +58,8 @@ model Task {
   assignedTo User? @relation("assignedTo", fields: [assignedToId], references: [id])
   createdBy  User? @relation("createdBy", fields: [createdById], references: [id])
 
+  createdAt DateTime @default(now()) @map("created_at")
+
   @@map("tasks")
 }
 

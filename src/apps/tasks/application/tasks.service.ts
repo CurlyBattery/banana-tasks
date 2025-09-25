@@ -85,6 +85,7 @@ export class TasksService {
       description: updateTaskInput.description,
       priority: updateTaskInput.priority,
       deadline: updateTaskInput.deadline,
+      createdAt: updateTaskInput.createdAt,
     });
 
     await this.tasksSearchService.update(task);

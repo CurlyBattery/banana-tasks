@@ -19,4 +19,8 @@ export class UpdateTaskInput {
   @IsDateString()
   @IsNotEmpty()
   deadline: Date;
+
+  @IsDateString()
+  @IsNotEmpty()
+  createdAt: Date;
 }

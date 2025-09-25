@@ -16,6 +16,7 @@ type Task {
     deadline: DateTime!
     assignedToId: Int
     createdById: Int
+    createdAt: DateTime
 }
 
 input CreateTaskInput {
@@ -32,6 +33,7 @@ input UpdateTaskInput {
     description: String!
     priority: Int!
     deadline: DateTime!
+    createdAt: DateTime!
 }
 
 input UpdateTaskStatusInput {
