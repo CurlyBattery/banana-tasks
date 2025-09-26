@@ -29,6 +29,7 @@
   "dependencies": {
     "@apollo/server": "4.4.1",
     "@elastic/elasticsearch": "8",
+    "@golevelup/nestjs-rabbitmq": "^6.0.2",
     "@nestjs/apollo": "^13.1.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^4.0.2",
@@ -40,6 +41,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/schedule": "^6.0.0",
+    "@nestjs/websockets": "^11.1.6",
     "argon2": "^0.44.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
@@ -51,8 +53,10 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "redis": "^5.8.2",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "socket.io": "^4.8.1",
     "ts-morph": "^26.0.0"
   },
   "devDependencies": {
